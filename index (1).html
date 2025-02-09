@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iframe on VHS TV with Remote</title>
+    <style>
+        .image-container {
+            position: relative;
+            display: inline-block;
+            width: 800px; /* Adjust the width of the TV screen */
+            margin-bottom: 20px;
+        }
+
+        .image-container img {
+            width: 100%; /* Make the image fill the container */
+            border-radius: 20px;
+            z-index: 2;
+        }
+
+        .tv-screen {
+            position: absolute;
+            top: 20px;
+            left: 60px;
+            width: 84%;
+            height: 63%;
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 1;
+            background: 
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px) repeat,
+                url('https://www.transparenttextures.com/patterns/zig-zag.png');
+            filter: 
+                contrast(1.4) 
+                brightness(0.8) 
+                saturate(1.2) 
+                hue-rotate(-10deg) 
+                blur(1.5px) 
+                url('https://www.transparenttextures.com/patterns/zig-zag.png');
+            background-size: 100% 4px;
+            transform: scale(1.03);
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transform: scale(1.05);
+        }
+
+        /* Remote Control Styles */
+        .remote {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Glitch Effect (Simulated with keyframes) */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-10px, 10px); }
+            40% { transform: translate(10px, -10px); }
+            60% { transform: translate(-10px, -5px); }
+            80% { transform: translate(10px, 5px); }
+            100% { transform: translate(0); }
+        }
+
+        .glitch {
+            animation: glitch 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+<div class="image-container">
+    <div class="tv-screen">
+        <iframe id="tvIframe" src="https://godriveplayer.com/player.php?type=series&tmdb=387&season=1&episode=1" allowfullscreen></iframe>
+    </div>
+    <img src="https://lh4.googleusercontent.com/f31R9yb2kAWyVIarXi6e-oLjDwJrFtKUXEbf33uT2ReBu3ilJLT9viZjODGHUsCnyD1arxpjjfylEeq7sJ4K6qaV0qx0P6TXIlSdGOlCzzA9kR2DGxONCQvRndzMWZ34ZQ=w1280" alt="TV Image">
+</div>
+
+<!-- Remote Control -->
+<div class="remote">
+    <button class="button" id="channelUp">Channel Up</button>
+    <button class="button" id="channelDown">Channel Down</button>
+</div>
+
+<script>
+    const iframe = document.getElementById("tvIframe");
+    const channelUpButton = document.getElementById("channelUp");
+    const channelDownButton = document.getElementById("channelDown");
+
+    let currentChannel = 1;
+    const channels = [
+        "https://godriveplayer.com/player.php?type=series&tmdb=387&season=1&episode=1", // Channel 1
+        "https://godriveplayer.com/player.php?type=series&tmdb=388&season=1&episode=1", // Channel 2
+        "https://godriveplayer.com/player.php?type=series&tmdb=389&season=1&episode=1"  // Channel 3
+    ];
+
+    function switchChannel(newChannel) {
+        // Apply glitch effect
+        iframe.classList.add("glitch");
+
+        // Simulate a brief glitch effect and then change the source
+        setTimeout(() => {
+            iframe.src = channels[newChannel];
+            currentChannel = newChannel;
+
+            // Remove the glitch effect after the animation is done
+            setTimeout(() => {
+                iframe.classList.remove("glitch");
+            }, 500);
+        }, 200); // Wait a little before changing the channel to create a glitch effect
+    }
+
+    channelUpButton.addEventListener("click", () => {
+        let nextChannel = (currentChannel + 1) % channels.length;
+        switchChannel(nextChannel);
+    });
+
+    channelDownButton.addEventListener("click", () => {
+        let nextChannel = (currentChannel - 1 + channels.length) % channels.length;
+        switchChannel(nextChannel);
+    });
+</script>
+
+</body>
+</html>
